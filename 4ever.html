@@ -62,8 +62,8 @@
         }
 
         .title {
-            font-size: min(8vw, 72px);
-            font-weight: 900;
+            font-size: 100px;
+            font-weight: 100;
             letter-spacing: 0.05em;
             color: #2b4162;
             margin-bottom: 2vh;
@@ -100,7 +100,7 @@
 
         @media (max-width: 768px) {
             .title {
-                font-size: min(10vw, 48px);
+                font-size: 40px;
                 letter-spacing: 0.03em;
                 margin-bottom: 1vh;
             }
@@ -114,7 +114,7 @@
         @media (max-width: 480px) {
             .title {
                 font-size: 32px;
-                font-weight: 800;
+                font-weight: 400;
             }
 
             .subtitle {
@@ -130,18 +130,21 @@
     </style>
 </head>
 <body>
+   <audio src="/staywithme.mp3" autoplay></audio>
     <div class="bg-elements">
         <div class="sun"></div>
         <div class="wave"></div>
     </div>
     
-    <div class="content">
-        <div class="title">日本航空</div>
+    <div class="content"> <audio controls autoplay> <source src="https://ia801703.us.archive.org/20/items/miki-matsubara-stay-with-me/%28%ED%95%9C%EA%B8%80%EC%9E%90%EB%A7%89%29%20MIki%20Matsubara%20-%20%E7%9C%9F%E5%A4%9C%E4%B8%AD%E3%81%AE%E3%83%89%E3%82%A2%20Stay%20with%20me.mp3"></audio>
+        <div class="title">日本へ向かうクマとカモ</div>
         <div class="subtitle">MILAN → TOKYO</div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+   
     <script>
+       
         let scene, camera, renderer, ticket;
         let autoRotation = true;
         let baseRotationSpeed = 0.01;
@@ -149,37 +152,84 @@
         let lastMousePosition = { x: 0, y: 0 };
         let isDragging = false;
 
-        function createFrontTexture() {
+         function createFrontTexture() {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 512;
-            canvas.height = 256;
+            canvas.width = 1024; // Aumentato per maggiore dettaglio
+            canvas.height = 512;
 
-            // Front texture
+            // Sfondo con texture carta
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+            // Aggiungi texture carta
+            for(let i = 0; i < canvas.width; i += 4) {
+                for(let j = 0; j < canvas.height; j += 4) {
+                    if(Math.random() > 0.5) {
+                        ctx.fillStyle = 'rgba(0,0,0,0.02)';
+                        ctx.fillRect(i, j, 2, 2);
+                    }
+                }
+            }
+
+            // Bordo biglietto con pattern tratteggiato
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
-            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+            ctx.setLineDash([10, 5]);
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+            ctx.setLineDash([]);
 
-            ctx.fillStyle = '#000000';
-            ctx.font = 'bold 36px Noto Sans JP';
-            ctx.fillText('JAPAN AIRLINES', 30, 60);
-            
-            ctx.font = '24px Noto Sans JP';
-            ctx.fillText('FLIGHT: JL 2025', 30, 100);
-            ctx.fillText('Milan → Tokyo', 30, 140);
-            ctx.fillText('DATE: 19/AUG', 30, 180);
-            ctx.fillText('SEAT: Window side', 30, 220);
+            // Linea separatrice verticale tratteggiata
+            ctx.beginPath();
+            ctx.setLineDash([10, 5]);
+            ctx.moveTo(canvas.width * 0.7, 20);
+            ctx.lineTo(canvas.width * 0.7, canvas.height - 20);
+            ctx.stroke();
+            ctx.setLineDash([]);
 
+            // Logo compagnia
             ctx.fillStyle = '#FF0000';
             ctx.beginPath();
-            ctx.arc(400, 60, 30, 0, Math.PI * 2);
+            ctx.arc(80, 80, 40, 0, Math.PI * 2);
             ctx.fill();
+
+            // Informazioni principali
+            ctx.fillStyle = '#000000';
+            ctx.font = 'bold 48px Noto Sans JP';
+            ctx.fillText('JAPAN AIRLINES', 160, 100);
+
+            ctx.font = '36px Noto Sans JP';
+            ctx.fillText('BOARDING PASS', 160, 150);
+            
+            // Dettagli volo
+            ctx.font = '32px Noto Sans JP';
+            const details = [
+                ['FLIGHT', 'JL 2025'],
+                ['FROM', 'MILAN (MXP)'],
+                ['TO', 'TOKYO (HND)'],
+                ['DATE', '19 AUG 2025'],
+                ['GATE', '待定'],
+                ['SEAT', '未定']
+            ];
+
+            let y = 220;
+            details.forEach(([label, value]) => {
+                ctx.font = '24px Noto Sans JP';
+                ctx.fillStyle = '#666666';
+                ctx.fillText(label, 50, y);
+                
+                ctx.font = 'bold 28px Noto Sans JP';
+                ctx.fillStyle = '#000000';
+                ctx.fillText(value, 200, y);
+                
+                y += 45;
+            });
+
+           
 
             return new THREE.CanvasTexture(canvas);
         }
+
 
         function createBackTexture() {
             const canvas = document.createElement('canvas');

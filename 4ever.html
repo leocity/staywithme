@@ -21,6 +21,85 @@
             touch-action: none;
         }
 
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2b4162;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .plane-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .splash-plane {
+            width: 120px;
+            height: 120px;
+            color: #ff4b4b;
+            transform: rotate(0deg);
+            position: relative;
+            z-index: 2;
+        }
+
+        .trail {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .trail-main {
+            width: 3px;
+            height: 0;
+            background: linear-gradient(to bottom, #ff4b4b 0%, transparent 100%);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .trail-side {
+            width: 2px;
+            height: 0;
+            background: linear-gradient(to bottom, #ff4b4b 0%, transparent 70%);
+            position: absolute;
+            bottom: 0;
+            opacity: 0.4;
+        }
+
+        .trail-left { 
+            left: calc(50% - 5px); 
+        }
+
+        .trail-right { 
+            left: calc(50% + 5px); 
+        }
+
+        .splash-text {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+        }
+
+        .splash-subtext {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+        }
+
+        /* Main Content */
         .bg-elements {
             position: fixed;
             top: 0;
@@ -58,25 +137,200 @@
             top: 0%;
             left: 5%;
             z-index: 3;
-          
         }
 
-        .title {
+        /* Text Animations */
+        @keyframes loopRight {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+
+        @keyframes loopLeft {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .text-animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-line {
+            overflow: hidden;
+            height: auto;
+            margin: 20px 0;
+        }
+
+        .hero-text {
+            font-family: 'Dela Gothic One', sans-serif;
             font-size: 100px;
-            font-weight: 100;
-            letter-spacing: 0.05em;
             color: #2b4162;
-            margin-bottom: 2vh;
-            line-height: 1.2;
+            white-space: nowrap;
+            opacity: 0.3;
         }
 
-        .subtitle {
-            font-size: min(3vw, 24px);
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            opacity: 0.9;
+        .secondary-line {
+            overflow: hidden;
+            height: auto;
+            margin: 10px 0;
+        }
+
+        .secondary-text {
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: 24px;
             color: #2b4162;
-            line-height: 1.4;
+            white-space: nowrap;
+            opacity: 0.1;
+        }
+
+        .loop-right {
+            animation: loopRight linear infinite;
+        }
+
+        .loop-left {
+            animation: loopLeft linear infinite;
+        }
+
+        .speed-1 { animation-duration: 15s; }
+        .speed-2 { animation-duration: 18s; }
+        .speed-3 { animation-duration: 20s; }
+        .speed-4 { animation-duration: 22s; }
+/* Animations */
+@keyframes takeOff {
+    0% { 
+        transform: translateY(0) rotate(0deg); /* Cambiato da -90deg a 0deg */
+        opacity: 1;
+    }
+    100% { 
+        transform: translateY(-140vh) rotate(0deg); /* Cambiato da -90deg a 0deg */
+        opacity: 1;
+    }
+}
+
+@keyframes trailGrow { 
+    0% { 
+        height: 0;
+        opacity: 0;
+    }
+    15% {
+        height: 0;
+        opacity: 0;
+    }
+    35% { 
+        height: 300px;
+        opacity: 0.8;
+    }
+    100% { 
+        height: 100vh;
+        opacity: 0;
+    }
+}
+
+/* Animation States */
+.splash-screen.animate-out .splash-plane {
+    animation: takeOff 2s ease-in forwards;
+}
+
+.splash-screen.animate-out .trail {
+    opacity: 1;
+}
+
+.splash-screen.animate-out .trail-main,
+.splash-screen.animate-out .trail-side {
+    animation: trailGrow 2s ease-out forwards;
+}
+
+.splash-screen.fade-out {
+    opacity: 0;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .title {
+        font-size: 40px;
+        letter-spacing: 0.03em;
+        margin-bottom: 1vh;
+    }
+
+    .subtitle {
+        font-size: min(4vw, 18px);
+        letter-spacing: 0.05em;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 32px;
+        font-weight: 400;
+    }
+
+    .subtitle {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .content {
+        top: 3%;
+        left: 3%;
+    }
+}
+  
+
+
+
+    /* Animations */
+        @keyframes takeOff {
+            0% { 
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(-140vh) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes trailGrow { 
+            0% { 
+                height: 0;
+                opacity: 0;
+            }
+            15% {
+                height: 0;
+                opacity: 0;
+            }
+            35% { 
+                height: 300px;
+                opacity: 0.8;
+            }
+            100% { 
+                height: 100vh;
+                opacity: 0;
+            }
+        }
+
+        /* Animation States */
+        .splash-screen.animate-out .splash-plane {
+            animation: takeOff 2s ease-in forwards;
+        }
+
+        .splash-screen.animate-out .trail {
+            opacity: 1;
+        }
+
+        .splash-screen.animate-out .trail-main,
+        .splash-screen.animate-out .trail-side {
+            animation: trailGrow 2s ease-out forwards;
+        }
+
+        .splash-screen.fade-out {
+            opacity: 0;
         }
 
         .petal {
@@ -89,130 +343,176 @@
             pointer-events: none;
             z-index: 3;
         }
-       #true{
-          z-index:9ù
-             height:20px;
-       }
-       
-       video{
-          z-index:9
-           
-       }
+
         canvas {
             position: fixed;
             top: 50px;
             left: 0;
             z-index: 2;
-         
         }
 
-        @media (max-width: 768px) {
-            .title {
-                font-size: 40px;
-                letter-spacing: 0.03em;
-                margin-bottom: 1vh;
-            }
+        video {
+            z-index: 9;
+        }
 
-            .subtitle {
-                font-size: min(4vw, 18px);
-                letter-spacing: 0.05em;
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .hero-text {
+                font-size: 60px;
+            }
+            .secondary-text {
+                font-size: 20px;
             }
         }
 
         @media (max-width: 480px) {
-            .title {
-                font-size: 32px;
-                font-weight: 400;
+            .hero-text {
+                font-size: 40px;
             }
-
-            .subtitle {
+            .secondary-text {
                 font-size: 16px;
-                font-weight: 600;
-            }
-
-            .content {
-                top: 3%;
-                left: 3%;
             }
         }
     </style>
 </head>
 <body>
-  
+    <div class="splash-screen" id="splashScreen">
+        <div class="plane-wrapper">
+           <svg class="splash-plane" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
+            <div class="trail">
+                <div class="trail-main"></div>
+                <div class="trail-side trail-left"></div>
+                <div class="trail-side trail-right"></div>
+            </div>
+        </div>
+        <div class="splash-text">クリックして始める</div>
+        <div class="splash-subtext">Click to  receive your gift</div>
+    </div>
+
     <div class="bg-elements">
         <div class="sun"></div>
         <div class="wave"></div>
     </div>
-    
+
     <div class="content">
- 
-   <video height=40 width="200" id="true" controls="" autoplay="true" name="media"><source src="https://ia801703.us.archive.org/20/items/miki-matsubara-stay-with-me/%28%ED%95%9C%EA%B8%80%EC%9E%90%EB%A7%89%29%20MIki%20Matsubara%20-%20%E7%9C%9F%E5%A4%9C%E4%B8%AD%E3%81%AE%E3%83%89%E3%82%A2%20Stay%20with%20me.mp3#t=65" type="audio/mpeg"></video>
-       
-        <div class="title">日本へ向かうクマとカモ</div>
-        <div class="subtitle">MILAN → TOKYO</div>
+        <video height=40 width="200" id="true" controls="" autoplay="true" name="media">
+            <source src="https://ia801703.us.archive.org/20/items/miki-matsubara-stay-with-me/%28%ED%95%9C%EA%B8%80%EC%9E%90%EB%A7%89%29%20MIki%20Matsubara%20-%20%E7%9C%9F%E5%A4%9C%E4%B8%AD%E3%81%AE%E3%83%89%E3%82%A2%20Stay%20with%20me.mp3#t=65" type="audio/mpeg">
+        </video>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-   
-    <script>
-       
+    <div class="text-animation-container">
+        <!-- Testo hero -->
+        <div class="hero-line">
+            <div class="hero-text loop-right speed-1">日本へ向かう</div>
+        </div>
+        <div class="hero-line">
+            <div class="hero-text loop-left speed-2">クマとカモ</div>
+        </div>
+        <div class="hero-line">
+            <div class="hero-text loop-right speed-1">MILAN → TOKYO</div>
+        </div>
+
+        <!-- Testo secondario -->
+        <div class="secondary-line">
+            <div class="secondary-text loop-left speed-3">BIGLIETTO REGALO - BIGLIETTO REGALO - BIGLIETTO REGALO</div>
+        </div>
+        <div class="secondary-line">
+            <div class="secondary-text loop-right speed-4">GIAPPONE ARRIVIAMO - GIAPPONE ARRIVIAMO</div>
+        </div>
+        <div class="secondary-line">
+            <div class="secondary-text loop-left speed-2">L'ORSO E L'ANATRA - L'ORSO E L'ANATRA</div>
+        </div>
+        <div class="secondary-line">
+            <div class="secondary-text loop-right speed-3">VOLO JL 2025 - VOLO JL 2025 - VOLO JL 2025</div>
+        </div>
+        <div class="secondary-line">
+            <div class="secondary-text loop-left speed-4">MILANO MALPENSA - TOKYO HANEDA</div>
+        </div>
+        <div class="secondary-line">
+            <div class="secondary-text loop-right speed-2">GATE DA DEFINIRE - POSTO DA ASSEGNARE</div>
+        </div>
+    </div>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+   <script>
+       let assetsLoaded = false;
         let scene, camera, renderer, ticket;
         let autoRotation = true;
-        let baseRotationSpeed = 0.01;
-        let dragSpeed = { x: 0, y: 0, z: 0 };
-        let lastMousePosition = { x: 0, y: 0 };
+        let baseRotationSpeed = 0.005;
+        let dragSpeed = {
+            x: 0,
+            y: 0,
+            z: 0
+        };
+        let lastMousePosition = {
+            x: 0,
+            y: 0
+        };
         let isDragging = false;
+        let cameraDefaultZ = 4;
+        let minZoom = 2;
+        let maxZoom = 8;
+        let initialPinchDistance = null;
 
-         function createFrontTexture() {
+        // Preload assets function
+        function preloadAssets() {
+            // Preload textures
+            createFrontTexture();
+            createBackTexture();
+            
+            // When everything is loaded
+            assetsLoaded = true;
+        }
+
+        function createFrontTexture() {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 1024; // Aumentato per maggiore dettaglio
+            canvas.width = 1024;
             canvas.height = 512;
-
-            // Sfondo con texture carta
+            
+            // Paper background texture
             ctx.fillStyle = '#fdfdfd';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Aggiungi texture carta
-            for(let i = 0; i < canvas.width; i += 4) {
-                for(let j = 0; j < canvas.height; j += 4) {
-                    if(Math.random() > 0.5) {
+            
+            // Add paper texture
+            for (let i = 0; i < canvas.width; i += 4) {
+                for (let j = 0; j < canvas.height; j += 4) {
+                    if (Math.random() > 0.5) {
                         ctx.fillStyle = 'rgba(0,0,0,0.2)';
                         ctx.fillRect(i, j, 2, 2);
                     }
                 }
             }
-
-            // Bordo biglietto con pattern tratteggiato
+            
+            // Ticket border with dashed pattern
             ctx.strokeStyle = '#000000';
             ctx.lineWidth = 2;
             ctx.setLineDash([10, 5]);
             ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
             ctx.setLineDash([]);
-
-            // Linea separatrice verticale tratteggiata
+            
+            // Vertical separator line
             ctx.beginPath();
             ctx.setLineDash([10, 5]);
             ctx.moveTo(canvas.width * 0.7, 20);
             ctx.lineTo(canvas.width * 0.7, canvas.height - 20);
             ctx.stroke();
             ctx.setLineDash([]);
-
-            // Logo compagnia
+            
+            // Company logo
             ctx.fillStyle = '#FF0000';
             ctx.beginPath();
             ctx.arc(80, 80, 40, 0, Math.PI * 2);
             ctx.fill();
-
-            // Informazioni principali
+            
+            // Main information
             ctx.fillStyle = '#000000';
             ctx.font = 'bold 48px Noto Sans JP';
             ctx.fillText('JAPAN AIRLINES', 160, 100);
-
             ctx.font = '36px Noto Sans JP';
             ctx.fillText('BOARDING PASS', 160, 150);
             
-            // Dettagli volo
+            // Flight details
             ctx.font = '32px Noto Sans JP';
             const details = [
                 ['FLIGHT', 'JL 2025'],
@@ -222,129 +522,120 @@
                 ['GATE', '待定'],
                 ['SEAT', '未定']
             ];
-
+            
             let y = 220;
             details.forEach(([label, value]) => {
                 ctx.font = '24px Noto Sans JP';
                 ctx.fillStyle = '#666666';
                 ctx.fillText(label, 50, y);
-                
                 ctx.font = 'bold 28px Noto Sans JP';
                 ctx.fillStyle = '#000000';
                 ctx.fillText(value, 200, y);
-                
                 y += 45;
             });
-
-           
-
+            
             return new THREE.CanvasTexture(canvas);
         }
 
-
-        function createBackTexture() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 512;
-            canvas.height = 256;
-
-            // Gradient background
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, '#ff4b4b');  // Sun red
-            gradient.addColorStop(0.5, '#f7f3f0'); // Background
-            gradient.addColorStop(1, '#2b4162');   // Wave blue
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Seigaiha pattern
-            function drawSeigaiha(x, y, radius) {
-                for(let i = 0; i < 3; i++) {
-                    ctx.beginPath();
-                    ctx.arc(x, y, radius - (i * 5), Math.PI, 0, true);
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-                    ctx.stroke();
-                }
+           function createBackTexture() {
+         const canvas = document.createElement('canvas');
+         const ctx = canvas.getContext('2d');
+         canvas.width = 512;
+         canvas.height = 256;
+         // Gradient background
+         const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+         gradient.addColorStop(0, '#ff4b4b');
+         gradient.addColorStop(0.5, '#f7f3f0');
+         gradient.addColorStop(1, '#2b4162');
+         ctx.fillStyle = gradient;
+         ctx.fillRect(0, 0, canvas.width, canvas.height);
+         // Seigaiha pattern
+         function drawSeigaiha(x, y, radius) {
+            for (let i = 0; i < 3; i++) {
+               ctx.beginPath();
+               ctx.arc(x, y, radius - (i * 5), Math.PI, 0, true);
+               ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+               ctx.stroke();
             }
-
-            for(let y = 0; y < canvas.height; y += 30) {
-                for(let x = 0; x < canvas.width; x += 30) {
-                    drawSeigaiha(x, y, 15);
-                }
+         }
+         for (let y = 0; y < canvas.height; y += 30) {
+            for (let x = 0; x < canvas.width; x += 30) {
+               drawSeigaiha(x, y, 15);
             }
-
-            // Border
-            ctx.strokeStyle = '#ff4b4b';
-            ctx.lineWidth = 8;
-            ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
-
-            // SVG Duck Logo
-            function drawSvgDuck(x, y, size) {
-                const scale = size / 512; // SVG originale è 512x512
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.scale(scale, scale);
-                
-                // Sposta l'origine per centrare il disegno
-                ctx.translate(-256, -256);
-                
-                ctx.fillStyle = '#2b4162';
-                
-                // Corpo principale della papera
-                ctx.beginPath();
-                ctx.moveTo(492.977, 219.06);
-                ctx.bezierCurveTo(481.123, 212.547, 467.247, 212.979, 455.858, 220.211);
-                ctx.bezierCurveTo(422.942, 241.107, 375.901, 250.45, 318.883, 247.584);
-                ctx.bezierCurveTo(331.75, 227.243, 338.661, 203.628, 338.661, 179.149);
-                ctx.bezierCurveTo(338.661, 108.41, 281.11, 50.858, 210.371, 50.858);
-                ctx.bezierCurveTo(143.111, 50.858, 87.847, 102.227, 82.513, 168.577);
-                ctx.bezierCurveTo(71.599, 179.486, 44.677, 202.853, 11.04, 206.865);
-                ctx.bezierCurveTo(6.37, 207.422, 2.404, 210.549, 0.776, 214.961);
-                ctx.bezierCurveTo(-0.853, 219.374, 0.126, 224.327, 3.315, 227.786);
-                ctx.bezierCurveTo(4.907, 229.513, 40.772, 267.526, 108.949, 267.524);
-                ctx.bezierCurveTo(111.654, 267.524, 114.417, 267.456, 117.225, 267.332);
-                ctx.bezierCurveTo(117.751, 267.888, 118.269, 268.453, 118.805, 268.999);
-                ctx.bezierCurveTo(99.389, 289.846, 88.36, 317.1, 88.141, 345.661);
-                ctx.bezierCurveTo(87.917, 376.449, 99.735, 405.435, 121.419, 427.276);
-                ctx.bezierCurveTo(143.101, 449.116, 171.987, 461.143, 202.757, 461.143);
-                ctx.bezierCurveTo(202.757, 461.143, 358.274, 461.143, 358.274, 461.143);
-                ctx.bezierCurveTo(408.606, 461.143, 449.356, 441.212, 476.114, 403.507);
-                ctx.bezierCurveTo(499.591, 370.425, 512, 324.207, 512, 269.846);
-                ctx.bezierCurveTo(512, 251.198, 504.712, 225.509, 492.977, 219.06);
-                ctx.closePath();
-                ctx.fill();
-
-                // Occhio
-                ctx.beginPath();
-                ctx.arc(179.087, 170.323, 12.524, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffffff';
-                ctx.fill();
-                
-                ctx.restore();
-            }
-            
-            // Disegna la papera SVG
-            drawSvgDuck(400, 80, 60);
-
-            // Bear
+         }
+         // Border
+         ctx.strokeStyle = '#ff4b4b';
+         ctx.lineWidth = 8;
+         ctx.strokeRect(15, 15, canvas.width - 30, canvas.height - 30);
+         // Testo giapponese a sinistra
+         ctx.fillStyle = '#000';
+         ctx.font = 'bold 32px Noto Sans JP';
+         ctx.fillText('ギフトチケット', 40, 60); // "Gift Ticket"
+         ctx.font = '20px Noto Sans JP';
+         ctx.fillText('このチケットは彼女のためです', 40, 100); // "Questo biglietto è per lei"
+         ctx.fillText('妥当性: 2025年', 40, 130); // "Valido fino al 2025"
+         ctx.fillText('素敵な思い出を作りましょう', 40, 160); // "Creiamo bei ricordi insieme"
+         // Timbro di validità
+         ctx.save();
+         ctx.translate(380, 220);
+         ctx.rotate(-0.4);
+         ctx.fillStyle = '#ff4b4b';
+         ctx.font = 'bold 32px Noto Sans JP';
+         ctx.fillText('有効', 0, 0); // "Valido"
+         ctx.restore();
+         // Animaletti a destra
+         // Bear
+         ctx.fillStyle = '#2b4162';
+         ctx.beginPath();
+         ctx.arc(400, 60, 20, 0, Math.PI * 2);
+         ctx.fill();
+         ctx.beginPath();
+         ctx.arc(385, 45, 8, 0, Math.PI * 2);
+         ctx.arc(415, 45, 8, 0, Math.PI * 2);
+         ctx.fill();
+         // Duck Logo
+         function drawSvgDuck(x, y, size) {
+            const scale = size / 512; // SVG originale è 512x512
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+            // Sposta l'origine per centrare il disegno
+            ctx.translate(-256, -256);
             ctx.fillStyle = '#2b4162';
+            // Corpo principale della papera
             ctx.beginPath();
-            ctx.arc(100, 60, 20, 0, Math.PI * 2);
+            ctx.moveTo(492.977, 219.06);
+            ctx.bezierCurveTo(481.123, 212.547, 467.247, 212.979, 455.858, 220.211);
+            ctx.bezierCurveTo(422.942, 241.107, 375.901, 250.45, 318.883, 247.584);
+            ctx.bezierCurveTo(331.75, 227.243, 338.661, 203.628, 338.661, 179.149);
+            ctx.bezierCurveTo(338.661, 108.41, 281.11, 50.858, 210.371, 50.858);
+            ctx.bezierCurveTo(143.111, 50.858, 87.847, 102.227, 82.513, 168.577);
+            ctx.bezierCurveTo(71.599, 179.486, 44.677, 202.853, 11.04, 206.865);
+            ctx.bezierCurveTo(6.37, 207.422, 2.404, 210.549, 0.776, 214.961);
+            ctx.bezierCurveTo(-0.853, 219.374, 0.126, 224.327, 3.315, 227.786);
+            ctx.bezierCurveTo(4.907, 229.513, 40.772, 267.526, 108.949, 267.524);
+            ctx.bezierCurveTo(111.654, 267.524, 114.417, 267.456, 117.225, 267.332);
+            ctx.bezierCurveTo(117.751, 267.888, 118.269, 268.453, 118.805, 268.999);
+            ctx.bezierCurveTo(99.389, 289.846, 88.36, 317.1, 88.141, 345.661);
+            ctx.bezierCurveTo(87.917, 376.449, 99.735, 405.435, 121.419, 427.276);
+            ctx.bezierCurveTo(143.101, 449.116, 171.987, 461.143, 202.757, 461.143);
+            ctx.bezierCurveTo(202.757, 461.143, 358.274, 461.143, 358.274, 461.143);
+            ctx.bezierCurveTo(408.606, 461.143, 449.356, 441.212, 476.114, 403.507);
+            ctx.bezierCurveTo(499.591, 370.425, 512, 324.207, 512, 269.846);
+            ctx.bezierCurveTo(512, 251.198, 504.712, 225.509, 492.977, 219.06);
+            ctx.closePath();
             ctx.fill();
+            // Occhio
             ctx.beginPath();
-            ctx.arc(85, 45, 8, 0, Math.PI * 2);
-            ctx.arc(115, 45, 8, 0, Math.PI * 2);
+            ctx.arc(179.087, 170.323, 12.524, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
             ctx.fill();
-
-            // Japanese text
-            ctx.fillStyle = '#2b4162';
-            ctx.font = 'bold 40px Noto Sans JP';
-            ctx.fillText('日本航空', 30, 140);
-            
-            ctx.font = 'bold 24px Noto Sans JP';
-            ctx.fillText('2025', 30, 180);
-
-            return new THREE.CanvasTexture(canvas);
-        }
+            ctx.restore();
+         }
+         // Disegna la papera SVG
+         drawSvgDuck(400, 120, 60);
+         return new THREE.CanvasTexture(canvas);
+      }
 
         function createPetal() {
             const petal = document.createElement('div');
@@ -352,38 +643,39 @@
             petal.style.left = Math.random() * window.innerWidth + 'px';
             petal.style.top = '-10px';
             document.body.appendChild(petal);
-
+            
             const duration = 5 + Math.random() * 5;
             const rotation = Math.random() * 360;
             const xMovement = (Math.random() - 0.5) * 200;
-
-            const keyframes = [
-                { transform: `translateY(0) translateX(0) rotate(${rotation}deg)` },
-                { transform: `translateY(${window.innerHeight + 10}px) translateX(${xMovement}px) rotate(${rotation + 360}deg)` }
-            ];
-
+            
+            const keyframes = [{
+                transform: `translateY(0) translateX(0) rotate(${rotation}deg)`
+            },
+            {
+                transform: `translateY(${window.innerHeight + 10}px) translateX(${xMovement}px) rotate(${rotation + 360}deg)`
+            }];
+            
             const animation = petal.animate(keyframes, {
                 duration: duration * 1000,
                 easing: 'linear'
             });
-
+            
             animation.onfinish = () => petal.remove();
         }
 
         function init() {
             scene = new THREE.Scene();
-            
             camera = new THREE.PerspectiveCamera(
-                75,
+                70,
                 window.innerWidth / window.innerHeight,
                 0.1,
                 1000
             );
-            camera.position.z = 4;
+            camera.position.z = cameraDefaultZ;
             
-            renderer = new THREE.WebGLRenderer({ 
+            renderer = new THREE.WebGLRenderer({
                 antialias: true,
-                alpha: true 
+                alpha: true
             });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setClearColor(0x000000, 0);
@@ -391,24 +683,25 @@
             
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
             scene.add(ambientLight);
-
+            
             const pointLight = new THREE.PointLight(0xFFC47D, 0.4);
             pointLight.position.set(10, 10, 5);
             scene.add(pointLight);
-
-            const frontMaterial = new THREE.MeshPhongMaterial({ 
+            
+            const frontMaterial = new THREE.MeshPhongMaterial({
                 map: createFrontTexture(),
-                shininess: 5,
-                reflectivity:0,
+                shininess: 0,
+                reflectivity: 0,
             });
-
-            const backMaterial = new THREE.MeshPhongMaterial({ 
+            
+            const backMaterial = new THREE.MeshPhongMaterial({
                 map: createBackTexture(),
                 shininess: 100,
                 specular: new THREE.Color(0xffffff)
             });
             
             const geometry = new THREE.PlaneGeometry(3, 1.5);
+            
             ticket = new THREE.Group();
             
             const frontPlane = new THREE.Mesh(geometry, frontMaterial);
@@ -419,35 +712,104 @@
             ticket.add(backPlane);
             
             scene.add(ticket);
-
+            
             // Event Listeners
             renderer.domElement.addEventListener('mousedown', onDragStart);
             renderer.domElement.addEventListener('mousemove', onDragMove);
             renderer.domElement.addEventListener('mouseup', onDragEnd);
+            renderer.domElement.addEventListener('wheel', onZoom);
+            
             renderer.domElement.addEventListener('touchstart', e => {
                 e.preventDefault();
                 onDragStart(e);
             });
+            
             renderer.domElement.addEventListener('touchmove', e => {
                 e.preventDefault();
-                onDragMove(e);
+                if (e.touches.length === 2) {
+                    onPinchZoom(e);
+                } else {
+                    onDragMove(e);
+                }
             });
+            
             renderer.domElement.addEventListener('touchend', e => {
                 e.preventDefault();
-                onDragEnd();
+                initialPinchDistance = null;
+                onDragEnd(e);
             });
-
+            
             animate();
+            
             setInterval(createPetal, 300);
         }
-       
 
-       
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Automatic rotation when not dragging
+            if (autoRotation) {
+                ticket.rotation.y += baseRotationSpeed;
+            }
+            
+            // Apply drag-based rotation
+            ticket.rotation.x += dragSpeed.x;
+            ticket.rotation.y += dragSpeed.y;
+            
+            // Damping effect
+            dragSpeed.x *= 0.95;
+            dragSpeed.y *= 0.95;
+            
+            renderer.render(scene, camera);
+        }
+
+        function onZoom(event) {
+            event.preventDefault();
+            // Calculate new camera Z value
+            let newZ = camera.position.z + (event.deltaY * 0.01);
+            // Limit zoom between minZoom and maxZoom
+            newZ = Math.min(Math.max(newZ, minZoom), maxZoom);
+            // Apply new zoom
+            camera.position.z = newZ;
+        }
+
+        function onPinchZoom(event) {
+            if (event.touches.length !== 2) return;
+            
+            const touch1 = event.touches[0];
+            const touch2 = event.touches[1];
+            
+            // Calculate distance between two touch points
+            const distance = Math.hypot(
+                touch1.clientX - touch2.clientX,
+                touch1.clientY - touch2.clientY
+            );
+            
+            if (initialPinchDistance === null) {
+                initialPinchDistance = distance;
+                return;
+            }
+            
+            // Calculate zoom factor based on distance difference
+            const zoomFactor = (initialPinchDistance - distance) * 0.01;
+            
+            // Calculate new camera Z value
+            let newZ = camera.position.z + zoomFactor;
+            
+            // Limit zoom between minZoom and maxZoom
+            newZ = Math.min(Math.max(newZ, minZoom), maxZoom);
+            
+            // Apply new zoom
+            camera.position.z = newZ;
+            initialPinchDistance = distance;
+        }
+
         function onDragStart(event) {
             isDragging = true;
             const position = event.touches ? event.touches[0] : event;
             lastMousePosition.x = position.clientX;
             lastMousePosition.y = position.clientY;
+            autoRotation = false;
         }
 
         function onDragMove(event) {
@@ -466,49 +828,46 @@
 
         function onDragEnd() {
             isDragging = false;
+            autoRotation = true;
+            
             setTimeout(() => {
-                dragSpeed = { x: 0, y: 0, z: 0 };
+                dragSpeed = {
+                    x: 0,
+                    y: 0,
+                    z: 0
+                };
             }, 1000);
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-
-            if (!isDragging) {
-                ticket.rotation.y += baseRotationSpeed;
-            }
-            
-            ticket.rotation.x += dragSpeed.x;
-            ticket.rotation.y += dragSpeed.y;
-            
-            dragSpeed.x *= 0.95;
-            dragSpeed.y *= 0.95;
-
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', function() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }, false);
-        
+      document.getElementById('splashScreen').addEventListener('click', function() {
+    if (!assetsLoaded) return; // Aspetta che gli asset siano caricati
+    
+    // Avvia l'animazione
+    this.classList.add('animate-out');
+    
+    // Avvia l'audio
+    const audioElement = document.querySelector('video');
+    if (audioElement) {
+        audioElement.play().catch(function(error) {
+            console.log("Audio play failed:", error);
+        });
+    }
+    
+    // Dopo l'animazione, inizializza la scena
+    setTimeout(() => {
+        this.classList.add('fade-out');
         init();
-           const listener = new THREE.AudioListener();
-camera.add(listener);
-
-const sound = new THREE.Audio(listener);
-
-const audioLoader = new THREE.AudioLoader();
-audioLoader.load('https://leocity.github.io/staywithme/song.mp3', function(buffer) {
-    sound.setBuffer(buffer);
-    sound.setLoop(true);
-    sound.setVolume(0.5);
-
-    // Avvia la riproduzione non appena il buffer è caricato
-    sound.play();
+        setTimeout(() => {
+            this.style.display = 'none';
+        }, 500);
+    }, 1000);
 });
 
-    </script>
+// Avvia il precaricamento
+preloadAssets();
+ 
+     
+   </script>
 </body>
+
 </html>

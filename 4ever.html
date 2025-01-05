@@ -55,10 +55,10 @@
 
         .content {
             position: fixed;
-            top: 5%;
+            top: 0%;
             left: 5%;
-            z-index: 1;
-            pointer-events: none;
+            z-index: 3;
+          
         }
 
         .title {
@@ -89,13 +89,21 @@
             pointer-events: none;
             z-index: 3;
         }
-
+       #true{
+          z-index:9ù
+             height:20px;
+       }
+       
+       video{
+          z-index:9
+           
+       }
         canvas {
             position: fixed;
-            top: 0;
+            top: 50px;
             left: 0;
             z-index: 2;
-            touch-action: none;
+         
         }
 
         @media (max-width: 768px) {
@@ -137,8 +145,8 @@
     </div>
     
     <div class="content">
-<audio id="Player" preload="yes" controls autoplay src="/song.mp3" title="click here to play this song">
-</audio>
+ 
+   <video height=40 width="200" id="true" controls="" autoplay="true" name="media"><source src="https://ia801703.us.archive.org/20/items/miki-matsubara-stay-with-me/%28%ED%95%9C%EA%B8%80%EC%9E%90%EB%A7%89%29%20MIki%20Matsubara%20-%20%E7%9C%9F%E5%A4%9C%E4%B8%AD%E3%81%AE%E3%83%89%E3%82%A2%20Stay%20with%20me.mp3#t=65" type="audio/mpeg"></video>
        
         <div class="title">日本へ向かうクマとカモ</div>
         <div class="subtitle">MILAN → TOKYO</div>
@@ -381,11 +389,11 @@
             renderer.setClearColor(0x000000, 0);
             document.body.appendChild(renderer.domElement);
             
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
             scene.add(ambientLight);
 
-            const pointLight = new THREE.PointLight(0xffffff, 1);
-            pointLight.position.set(5, 5, 5);
+            const pointLight = new THREE.PointLight(0xFFC47D, 0.4);
+            pointLight.position.set(10, 10, 5);
             scene.add(pointLight);
 
             const frontMaterial = new THREE.MeshPhongMaterial({ 
@@ -486,20 +494,21 @@
         }, false);
         
         init();
-           
-          const listener = new THREE.AudioListener();
-camera.add( listener );
-       
-const sound = new THREE.Audio( listener );
-       
-       const audioLoader = new THREE.AudioLoader();
-audioLoader.load( 'https://s3.jayasrilanka.net/albums/Tiktok-Trending-Songs-Vol-02/Mayonaka%20No%20Door%20(Stay%20With%20Me%20TikTok%20Trending%20Songs)%20-%20Miki%20Matsubara.mp3', function( buffer ) {
-	sound.setBuffer( buffer );
-	sound.setLoop( true );
-	sound.setVolume( 0.5 );
-	sound.play();
-   sound.autoplay(true);
+           const listener = new THREE.AudioListener();
+camera.add(listener);
+
+const sound = new THREE.Audio(listener);
+
+const audioLoader = new THREE.AudioLoader();
+audioLoader.load('https://leocity.github.io/staywithme/song.mp3', function(buffer) {
+    sound.setBuffer(buffer);
+    sound.setLoop(true);
+    sound.setVolume(0.5);
+
+    // Avvia la riproduzione non appena il buffer è caricato
+    sound.play();
 });
+
     </script>
 </body>
 </html>

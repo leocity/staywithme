@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Interactive Landing Page</title>
+    <title>Interactive Landing Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -14,32 +15,75 @@
         body {
             font-family: Arial, sans-serif;
             overflow: hidden;
-            background: linear-gradient(135deg, #4AA8FF 50%, #FFD93D 50%);
-            color: white;
-            height: 100vh;
+            background: #f8f4ed;
+            color: #2c3e50;
         }
 
-        .content {
-            position: relative;
-            padding: 2rem;
-            z-index: 1;
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #f8f4ed, #ffe5e5);
+            overflow: hidden;
         }
 
-        .header {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+        .wave {
+            position: absolute;
+            width: 100%;
+            height: 200px;
+            bottom: 0;
+            left: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23235789' fill-opacity='0.2' d='M0,160 C320,300,480,0,720,160 C960,320,1120,20,1440,180 L1440,320 L0,320 Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 1440px 320px;
+            animation: wave 30s linear infinite;
         }
 
-        .title {
-            font-size: 5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
+        .wave:nth-child(2) {
+            bottom: 10px;
+            opacity: 0.5;
+            animation: wave 35s linear infinite reverse;
         }
 
-        .subtitle {
-            font-size: 2rem;
-            margin-bottom: 2rem;
+        .sakura {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23ffb7c5' d='M50,0 C60,30 70,50 100,50 C70,50 60,70 50,100 C40,70 30,50 0,50 C30,50 40,30 50,0'/%3E%3C/svg%3E");
+            animation: falling 15s linear infinite;
+        }
+
+        .cloud {
+            position: absolute;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40'%3E%3Cpath fill='%23FFFFFF' d='M0,20 Q25,0 50,20 T100,20 Q75,40 50,20 T0,20'/%3E%3C/svg%3E");
+            width: 200px;
+            height: 80px;
+            opacity: 0.9;
+            background-size: contain;
+            animation: float 40s linear infinite;
+        }
+
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1440px; }
+        }
+
+        @keyframes falling {
+            0% {
+                transform: translate(0, -10%) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(100px, 100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100vw); }
         }
 
         #canvas-container {
@@ -48,27 +92,79 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: 1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            font-size: 4rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        .subheader {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #34495e;
+        }
+
+        .info {
+            font-size: 1.2rem;
+            max-width: 600px;
+            color: #34495e;
         }
     </style>
 </head>
 <body>
+    <div class="background-container">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
     <div id="canvas-container"></div>
     <div class="content">
-        <div class="header">
-            AUTHOR: YOUR NAME<br>
-            FRAMEWORK: THREE.JS
+        <div class="header">Frontend Developer</div>
+        <div class="subheader">(Based in Tokyo and Kawasaki)</div>
+        <div class="info">
+            <p>FRAMEWORK: Vue/Next</p>
+            <p>LIBRARY: Three.js/GSAP</p>
+            <p>CMS: MicroCMS</p>
         </div>
-        <h1 class="title">Portfolio</h1>
-        <h2 class="subtitle">(Based in Your Location)</h2>
     </div>
 
-    <script type="module">
-        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
-        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/controls/OrbitControls.js';
-        import { DragControls } from 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/controls/DragControls.js';
+    <script>
+        // Add dynamic elements
+        function createSakura() {
+            const sakura = document.createElement('div');
+            sakura.className = 'sakura';
+            sakura.style.left = Math.random() * 100 + 'vw';
+            sakura.style.animationDuration = Math.random() * 5 + 5 + 's';
+            document.querySelector('.background-container').appendChild(sakura);
+            
+            sakura.addEventListener('animationend', () => sakura.remove());
+        }
 
-        // Scene setup
+        function createCloud() {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            cloud.style.top = Math.random() * 50 + 'vh';
+            cloud.style.animationDuration = Math.random() * 10 + 20 + 's';
+            document.querySelector('.background-container').appendChild(cloud);
+            
+            cloud.addEventListener('animationend', () => cloud.remove());
+        }
+
+        setInterval(createSakura, 800);
+        setInterval(createCloud, 10000);
+
+        // Three.js setup
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -76,30 +172,32 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Create card
-        const cardGeometry = new THREE.PlaneGeometry(2, 3);
-        const cardMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0xFF97B5,
-            side: THREE.DoubleSide 
+        // Create card geometry
+        const geometry = new THREE.BoxGeometry(2, 3, 0.1);
+        const material = new THREE.MeshPhongMaterial({ 
+            color: 0xffd7d7,
+            shininess: 100
         });
-        const card = new THREE.Mesh(cardGeometry, cardMaterial);
+        const card = new THREE.Mesh(geometry, material);
         scene.add(card);
 
-        // Camera position
-        camera.position.z = 5;
+        // Add lights
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(0, 0, 2);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-        // Controls
-        const orbitControls = new OrbitControls(camera, renderer.domElement);
-        const dragControls = new DragControls([card], camera, renderer.domElement);
+        camera.position.z = 5;
 
         // Animation
         function animate() {
             requestAnimationFrame(animate);
+            card.rotation.y += 0.01;
             renderer.render(scene, camera);
         }
         animate();
 
-        // Responsive
+        // Handle window resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();

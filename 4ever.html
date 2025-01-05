@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page Giapponese</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
+
+        :root {
+            --primary-dark: #1a1a2e;
+            --primary-pink: #ffb7c5;
+            --accent-pink: #FF9AAA;
+        }
+
+        body {
+            background: var(--primary-dark);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        #threejs-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 20;
+            pointer-events: all;
+        }
+
+        .hero-text {
+            font-family: 'Dela Gothic One', cursive;
+            font-size: clamp(2rem, 15vw, 12rem);
+            line-height: 0.9;
+            transform: skew(-5deg);
+        }
+
+        .japanese-text {
+            font-family: 'Dela Gothic One', cursive;
+        }
+
+        .sakura {
+            position: absolute;
+            background: var(--primary-pink);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        @keyframes fall {
+            0% { transform: translate(0, -10px) rotate(0deg); }
+            100% { transform: translate(100px, 100vh) rotate(360deg); }
+        }
+
+        .diagonal-text {
+            transform: skew(-5deg);
+            font-family: 'Dela Gothic One', cursive;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .clickable {
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body>
+    <div id="threejs-container"></div>
+    <div id="sakura-container"></div>
+
+    <div class="content-wrapper">
+        <nav class="absolute top-0 left-0 p-4">
+            <h1 class="text-2xl font-bold japanese-text text-white">ポートフォリオ</h1>
+        </nav>
+
+        <main class="container mx-auto min-h-screen flex flex-col justify-center px-4">
+            <div class="relative">
+                <div class="mb-8">
+                    <h2 class="hero-text text-white mb-4">19/AUG</h2>
+                    <div class="diagonal-text text-white">
+                        <h3 class="text-4xl md:text-6xl font-bold mb-2">フロントエンド</h3>
+                        <h3 class="text-4xl md:text-6xl font-bold">デベロッパー</h3>
+                    </div>
+                </div>
+
+                <div class="absolute top-4 right-4 text-right text-white">
+                    <p class="mb-1 japanese-text">東京在住</p>
+                    <div class="flex justify-end space-x-4 japanese-text">
+                        <span>時々</span>
+                        <span>いつも</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        let camera, scene, renderer, ticket;
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: true, 
+                alpha: true 
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            
+            const container = document.getElementById('threejs-container');
+            container.appendChild(renderer.domElement);
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(2, 2, 5);
+            scene.add(directionalLight);
+            
+            createTicket();
+            
+            container.addEventListener('mousedown', onMouseDown);
+            container.addEventListener('mousemove', onMouseMove);
+            container.addEventListener('mouseup', onMouseUp);
+            
+            animate();
+        }
+        
+        function createTicket() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#f4f4f4';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.globalAlpha = 0.05;
+            for (let i = 0; i < 1000; i++) {
+                ctx.fillStyle = Math.random() > 0.5 ? '#000' : '#fff';
+                ctx.fillRect(
+                    Math.random() * canvas.width,
+                    Math.random() * canvas.height,
+                    1,
+                    1
+                );
+            }
+            ctx.globalAlpha = 1.0;
+            
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+            
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 80px Dela Gothic One';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('JAPAN AIRLINES', 40, 40);
+            
+            ctx.font = 'bold 48px Arial';
+            ctx.fillText('FLIGHT: JL 2025', 40, 160);
+            ctx.fillText('TOKYO → OSAKA', 40, 240);
+            
+            ctx.font = '32px Arial';
+            ctx.fillText('DATE: 19 AUG 2025', 40, 320);
+            ctx.fillText('SEAT: 19A', canvas.width - 200, 320);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            
+            const paperMaterial = new THREE.MeshStandardMaterial({
+                map: texture,
+                roughness: 0.95,
+                metalness: 0.0,
+                side: THREE.DoubleSide
+            });
+            
+            const edgeMaterial = new THREE.MeshStandardMaterial({
+                color: 0xf4f4f4,
+                roughness: 0.95,
+                metalness: 0.0
+            });
+            
+            const materials = [
+                edgeMaterial,
+                edgeMaterial,
+                edgeMaterial,
+                edgeMaterial,
+                paperMaterial,
+                paperMaterial
+            ];
+            
+            const geometry = new THREE.BoxGeometry(5, 2.5, 0.05);
+            ticket = new THREE.Mesh(geometry, materials);
+            scene.add(ticket);
+        }
+        
+        function onMouseDown(event) {
+            isDragging = true;
+            previousMousePosition = {
+                x: event.clientX,
+                y: event.clientY
+            };
+        }
+        
+        function onMouseMove(event) {
+            if (!isDragging) return;
+            
+            const deltaMove = {
+                x: event.clientX - previousMousePosition.x,
+                y: event.clientY - previousMousePosition.y
+            };
+            
+            ticket.rotation.y += deltaMove.x * 0.01;
+            ticket.rotation.x += deltaMove.y * 0.01;
+            
+            previousMousePosition = {
+                x: event.clientX,
+                y: event.clientY
+            };
+        }
+        
+        function onMouseUp() {
+            isDragging = false;
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (!isDragging) {
+                ticket.rotation.y += 0.003;
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        init();
+
+        function createSakura() {
+            const sakura = document.createElement('div');
+            sakura.className = 'sakura';
+            
+            const size = Math.random() * 15 + 5;
+            sakura.style.width = `${size}px`;
+            sakura.style.height = `${size}px`;
+            
+            const startPosition = Math.random() * window.innerWidth;
+            sakura.style.left = `${startPosition}px`;
+            sakura.style.top = '-10px';
+            
+            const fallDuration = Math.random() * 3 + 3;
+            const fallDelay = Math.random() * 5;
+            
+            sakura.style.animation = `fall ${fallDuration}s ${fallDelay}s linear`;
+            
+            document.getElementById('sakura-container').appendChild(sakura);
+            
+            setTimeout(() => {
+                sakura.remove();
+            }, (fallDuration + fallDelay) * 1000);
+        }
+
+        setInterval(createSakura, 300);
+
+        for(let i = 0; i < 10; i++) {
+            createSakura();
+        }
+    </script>
+</body>
+</html>

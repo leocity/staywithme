@@ -130,13 +130,16 @@
     </style>
 </head>
 <body>
-   <audio src="/staywithme.mp3" autoplay></audio>
+  
     <div class="bg-elements">
         <div class="sun"></div>
         <div class="wave"></div>
     </div>
     
-    <div class="content"> <audio controls autoplay> <source src="https://ia801703.us.archive.org/20/items/miki-matsubara-stay-with-me/%28%ED%95%9C%EA%B8%80%EC%9E%90%EB%A7%89%29%20MIki%20Matsubara%20-%20%E7%9C%9F%E5%A4%9C%E4%B8%AD%E3%81%AE%E3%83%89%E3%82%A2%20Stay%20with%20me.mp3"></audio>
+    <div class="content">
+<audio id="Player" preload="yes" controls autoplay src="https://s3.jayasrilanka.net/albums/Tiktok-Trending-Songs-Vol-02/Mayonaka%20No%00Door%20(Stay%20With%20Me%20TikTok%20Trending%20Songs)%20-%20Miki%20Matsubara.mp3" title="click here to play this song">
+</audio>
+       
         <div class="title">日本へ向かうクマとカモ</div>
         <div class="subtitle">MILAN → TOKYO</div>
     </div>
@@ -159,14 +162,14 @@
             canvas.height = 512;
 
             // Sfondo con texture carta
-            ctx.fillStyle = '#ffffff';
+            ctx.fillStyle = '#fdfdfd';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Aggiungi texture carta
             for(let i = 0; i < canvas.width; i += 4) {
                 for(let j = 0; j < canvas.height; j += 4) {
                     if(Math.random() > 0.5) {
-                        ctx.fillStyle = 'rgba(0,0,0,0.02)';
+                        ctx.fillStyle = 'rgba(0,0,0,0.2)';
                         ctx.fillRect(i, j, 2, 2);
                     }
                 }
@@ -207,7 +210,7 @@
                 ['FLIGHT', 'JL 2025'],
                 ['FROM', 'MILAN (MXP)'],
                 ['TO', 'TOKYO (HND)'],
-                ['DATE', '19 AUG 2025'],
+                ['DATE', 'TBA'],
                 ['GATE', '待定'],
                 ['SEAT', '未定']
             ];
@@ -387,7 +390,8 @@
 
             const frontMaterial = new THREE.MeshPhongMaterial({ 
                 map: createFrontTexture(),
-                shininess: 50
+                shininess: 5,
+                reflectivity:0,
             });
 
             const backMaterial = new THREE.MeshPhongMaterial({ 
@@ -428,7 +432,9 @@
             animate();
             setInterval(createPetal, 300);
         }
+       
 
+       
         function onDragStart(event) {
             isDragging = true;
             const position = event.touches ? event.touches[0] : event;
@@ -480,6 +486,20 @@
         }, false);
         
         init();
+           
+          const listener = new THREE.AudioListener();
+camera.add( listener );
+       
+const sound = new THREE.Audio( listener );
+       
+       const audioLoader = new THREE.AudioLoader();
+audioLoader.load( 'https://s3.jayasrilanka.net/albums/Tiktok-Trending-Songs-Vol-02/Mayonaka%20No%20Door%20(Stay%20With%20Me%20TikTok%20Trending%20Songs)%20-%20Miki%20Matsubara.mp3', function( buffer ) {
+	sound.setBuffer( buffer );
+	sound.setLoop( true );
+	sound.setVolume( 0.5 );
+	sound.play();
+   sound.autoplay(true);
+});
     </script>
 </body>
 </html>
